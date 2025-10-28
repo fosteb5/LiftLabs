@@ -1,81 +1,57 @@
-#include <TinyGPS++.h>
-#include <HardwareSerial.h>
+// ESP32 UART2 dual-protocol sniffer: detects NMEA ('$') or UBX (0xB5 0x62)
+// GPS TX -> GPIO26 (RX), GPS RX not needed for this test
+HardwareSerial GPSser(2);
+const int RX_PIN = 26;
+const int TX_PIN = -1;
 
-#define SERIAL_MON_BAUD 9600
-#define GPS_BAUD        9600
-#define GPS_RX_PIN      16   // GPS TX -> ESP32 16
-#define GPS_TX_PIN      17   // GPS RX <- ESP32 17 (optional)
+const long BAUDS[] = {9600, 38400, 57600, 4800, 115200};
+int idx = 0; bool locked = false; bool ubx = false; unsigned long last = 0;
+uint8_t prev = 0;
 
-TinyGPSPlus gps;
-HardwareSerial SerialGPS(2);
-
-unsigned long lastInfo = 0;
-
-void setup() {
-  Serial.begin(SERIAL_MON_BAUD);
-  delay(50);
-  Serial.println();
-  Serial.println(F("ESP32 DevKit V1 + NEO-6M (UART2 on 16/17)"));
-  Serial.println(F("Raw NMEA will stream below. Waiting for fix..."));
-
-  SerialGPS.begin(GPS_BAUD, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
+void startAt(long b){
+  GPSser.end(); delay(50);
+  GPSser.begin(b, SERIAL_8N1, RX_PIN, TX_PIN);
+  Serial.print("Listening at "); Serial.println(b);
 }
 
-void loop() {
-  // Stream raw NMEA and feed parser
-  while (SerialGPS.available() > 0) {
-    char c = SerialGPS.read();
-    Serial.write(c);   // raw NMEA echo for sanity
-    gps.encode(c);
-  }
-
-  // Every second: show parsed status
-  if (millis() - lastInfo >= 1000) {
-    lastInfo = millis();
-
-    Serial.println(F("\n--- GPS STATUS ---"));
-    if (gps.location.isValid()) {
-      Serial.print(F("Lat: ")); Serial.println(gps.location.lat(), 6);
-      Serial.print(F("Lng: ")); Serial.println(gps.location.lng(), 6);
-      Serial.print(F("Age(ms): ")); Serial.println(gps.location.age());
-    } else {
-      Serial.println(F("Location: INVALID (no fix yet)"));
-    }
-
-    if (gps.date.isValid() && gps.time.isValid()) {
-      Serial.print(F("UTC: "));
-      Serial.print(gps.date.year()); Serial.print('-');
-      print2(gps.date.month()); Serial.print('-');
-      print2(gps.date.day()); Serial.print(' ');
-      print2(gps.time.hour()); Serial.print(':');
-      print2(gps.time.minute()); Serial.print(':');
-      print2(gps.time.second()); Serial.println();
-    } else {
-      Serial.println(F("UTC time/date: not valid yet"));
-    }
-
-    if (gps.satellites.isValid()) {
-      Serial.print(F("Satellites: "));
-      Serial.println(gps.satellites.value());  // need ~4+ for 3D fix
-    } else {
-      Serial.println(F("Satellites: unknown"));
-    }
-
-    if (gps.hdop.isValid()) {
-      Serial.print(F("HDOP: "));
-      Serial.println(gps.hdop.hdop(), 1);      // <= 2.0 is good
-    } else {
-      Serial.println(F("HDOP: unknown"));
-    }
-
-    // TinyGPS++ stats help diagnose parsing vs reception
-    Serial.print(F("Chars: ")); Serial.print(gps.charsProcessed());
-    Serial.print(F("  Sentences: ")); Serial.print(gps.sentencesWithFix());
-    Serial.print(F("  CSumFail: ")); Serial.println(gps.failedChecksum());
-  }
+void setup(){
+  delay(300);
+  Serial.begin(115200);
+  Serial.println("\nDual-protocol GPS sniffer (RX=GPIO26)");
+  startAt(BAUDS[idx]); last = millis();
 }
 
-static void print2(uint32_t v) {
-  if (v < 10) Serial.print('0');
-  Serial.print(v);
+void loop(){
+  if(!locked && millis()-last > 3000){
+    idx = (idx+1) % (sizeof(BAUDS)/sizeof(BAUDS[0]));
+    startAt(BAUDS[idx]); last = millis();
+  }
+  while(GPSser.available()){
+    uint8_t c = GPSser.read();
+
+    if(!locked){
+      // NMEA?
+      if(c == '$'){ locked = true; ubx = false;
+        Serial.print("NMEA detected at "); Serial.println(BAUDS[idx]);
+      }
+      // UBX? (sync chars 0xB5 0x62)
+      if(prev == 0xB5 && c == 0x62){ locked = true; ubx = true;
+        Serial.print("UBX detected at "); Serial.println(BAUDS[idx]);
+      }
+      prev = c;
+      continue;
+    }
+
+    if(ubx){
+      // Print UBX as hex bytes
+      if(c < 16) Serial.print('0');
+      Serial.print(c, HEX);
+      Serial.print(' ');
+      // add a newline occasionally for readability
+      static int cnt=0; if(++cnt % 32 == 0) Serial.println();
+    } else {
+      // Forward NMEA ASCII
+      Serial.write(c);
+    }
+  }
 }

@@ -1,31 +1,36 @@
-// QUICK TEST: ramp up/down in a loop
-const int ESC_PIN = 26;
-const int CH = 0, HZ = 50, BITS = 16;
-const int MIN_US = 1000, MID_US = 1400;
+// Simplest possible ESC test for ESP32
+// Arms, runs low for 3 s, then stops
 
-uint32_t usToDuty(int us){
-  uint32_t top = (1u<<BITS)-1;
-  return (uint32_t)((uint64_t)us * top / (1000000UL/HZ));
-}
+int escPin = 26;
 
 void setup() {
-  ledcSetup(CH, HZ, BITS);
-  ledcAttachPin(ESC_PIN, CH);
+  pinMode(escPin, OUTPUT);
 
-  // Arm
-  ledcWrite(CH, usToDuty(MIN_US)); delay(3500);
+  // Arm ESC
+  for (int i = 0; i < 175; i++) {        // about 3.5 s
+    digitalWrite(escPin, HIGH);
+    delayMicroseconds(1000);             // 1 ms pulse = throttle min
+    digitalWrite(escPin, LOW);
+    delayMicroseconds(19000);            // total 20 ms frame (50 Hz)
+  }
+
+  // Run low throttle for 3 s
+  for (int i = 0; i < 150; i++) {        // about 3 s
+    digitalWrite(escPin, HIGH);
+    delayMicroseconds(1200);             // ≈10 % throttle
+    digitalWrite(escPin, LOW);
+    delayMicroseconds(18800);
+  }
+
+  // Stop (back to min)
+  for (int i = 0; i < 100; i++) {
+    digitalWrite(escPin, HIGH);
+    delayMicroseconds(1000);
+    digitalWrite(escPin, LOW);
+    delayMicroseconds(19000);
+  }
 }
 
 void loop() {
-  // Ramp up
-  for (int u = MIN_US; u <= MID_US; u += 2) {
-    ledcWrite(CH, usToDuty(u)); delay(10);
-  }
-  delay(1500); // hold
-
-  // Ramp down
-  for (int u = MID_US; u >= MIN_US; u -= 2) {
-    ledcWrite(CH, usToDuty(u)); delay(10);
-  }
-  delay(1000);
+  // nothing
 }

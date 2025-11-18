@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 274 55% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 274 55% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 274 55% 15%;
+
+    /* Western Purple */
+    --primary: 274 55% 33%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 274 55% 45%;
+    --primary-dark: 274 55% 25%;
+
+    /* Gold Accent */
+    --accent: 51 100% 50%;
+    --accent-foreground: 274 55% 15%;
+    --accent-muted: 51 100% 70%;
+
+    --secondary: 274 30% 96%;
+    --secondary-foreground: 274 55% 33%;
+
+    --muted: 274 20% 96%;
+    --muted-foreground: 274 20% 45%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 274 20% 88%;
+    --input: 274 20% 88%;
+    --ring: 274 55% 33%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-purple: linear-gradient(135deg, hsl(274 55% 33%) 0%, hsl(274 55% 25%) 100%);
+    --gradient-purple-gold: linear-gradient(135deg, hsl(274 55% 33%) 0%, hsl(274 45% 40%) 50%, hsl(51 100% 50%) 100%);
+    --gradient-gold-shine: linear-gradient(90deg, hsl(51 100% 50%) 0%, hsl(51 100% 60%) 50%, hsl(51 100% 50%) 100%);
+
+    /* Shadows */
+    --shadow-purple: 0 10px 40px -10px hsl(274 55% 33% / 0.4);
+    --shadow-gold: 0 5px 25px -5px hsl(51 100% 50% / 0.3);
+    --shadow-card: 0 4px 20px -2px hsl(274 55% 15% / 0.08);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .gradient-purple {
+    background: var(--gradient-purple);
+  }
+
+  .gradient-purple-gold {
+    background: var(--gradient-purple-gold);
+  }
+
+  .gradient-gold-shine {
+    background: var(--gradient-gold-shine);
+  }
+
+  .shadow-purple {
+    box-shadow: var(--shadow-purple);
+  }
+
+  .shadow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--transition-bounce);
+  }
+
+  .text-gradient-gold {
+    background: var(--gradient-gold-shine);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}

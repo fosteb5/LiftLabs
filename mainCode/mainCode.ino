@@ -8,15 +8,35 @@
 #include <Adafruit_MPU6050.h>
 #include <ESP32Servo.h> // used to make the servo function
 #include <Ultrasonic.h> // needed to calculate distannce with the ultrasonic
-
-
-//setting pins
+// flight path for the blimp
+struct Waypoint {
+    float latitude;
+    float longitude;
+    float alt;
+};
+// *** this is where we change and add waypoints ***
+// its goes lat, long, alt(meters)
+const Waypoint missionPath[] = {
+    {42.9849, -81.2453, 30.0}, 
+    {42.9900, -81.2500, 20.0}, 
+    {43.0000, -81.2600, 0.5}   
+}
+// counter that keeps track of the current waypoint
+int currentWaypoint = 0;
+//****PINS THAT ARE SET/USED****
 //motor esc pin
 const int leftESCPin = 26;
 const int rightESCPin = 25;
+//motor servos pins
+const int leftMotorServoPin = 18;
+const int rightMotorServoPin = 19;
+//flap servo pins
+const int leftFlapServoPin = 21;
+const int rightFlapServoPin = 3;
+
+
 // Functions used to control the Blimp
 // Motor Control
-
 void setMotorSpeeds(int leftPercent, int rightPercent) {
   // Constrain inputs to ensure they stay within the -100 to 100 range
   leftPercent = constrain(leftPercent, -100, 100);
@@ -49,6 +69,32 @@ void setMotorSpeeds(int leftPercent, int rightPercent) {
   }
 }
 
+// Servo Control for Motors
+// declaring the servos (activating the library)
+Servo leftServo;
+Servo rightServo;
+void setMotorServoAngle(int leftDegree, int rightDegree) {
+  // Constrain to 0-180 to protect the MG995 gears
+  int leftValid = constrain(leftDegree, 0, 180);
+  int rightValid = constrain(rightDegree, 0, 180);
+
+  leftServo.write(leftValid);
+  rightServo.write(rightValid);
+}
+
+// Servo Control for flaps
+// declaring the servos (activating the library)
+Servo leftFlap;
+Servo rightFlap;
+void setMotorServoAngle(int leftFlapDegree, int rightFlapDegree) {
+  // Constrain to 0-180 to protect the MG995 gears
+  int leftFlapValid = constrain(leftFlapDegree, 0, 180);
+  int rightFlapValid = constrain(rightFlapDegree, 0, 180);
+
+  leftFlap.write(leftFlapValid);
+  rightFlap.write(rightFlapValid);
+}
+
 
 void setup() {
 
@@ -60,6 +106,18 @@ void setup() {
   for (int i = 0; i < 150; i++) {
     setMotorSpeeds(0, 0); 
   }
+
+  // setting the servo values to ensure proper function
+  // MG995s use 50Hz and typically a 500us to 2500us range
+  leftServo.setPeriodHertz(50);
+  rightServo.setPeriodHertz(50);
+  leftFlap.setPeriodHertz(50);
+  rightFlap.setPeriodHertz(50);
+
+  leftServo.attach(leftMotorServoPin, 500, 2500);
+  rightServo.attach(rightMotorServoPin, 500, 2500);
+  leftFlap.attach(leftFlapServoPin, 500, 2500);
+  rightFlap.attach(rightFlapServoPin, 500, 2500);
 }
 
 void loop() {

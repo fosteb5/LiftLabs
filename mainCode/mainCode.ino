@@ -8,25 +8,58 @@
 #include <Adafruit_MPU6050.h>
 #include <ESP32Servo.h> // used to make the servo function
 #include <Ultrasonic.h> // needed to calculate distannce with the ultrasonic
- 
- // establishing the GPS module
- HardwareSerial GPS_serial(1); // setting the serial to read
- static const int GPS_RX_PIN = 16; // RX pin for the gps
- static const int GPS_TX_PIN = 17; // TX pin for the gps
 
-// establishing the gyroscope module
-Adafruit_MPU6050 mpu;
-float pitch = 0, roll = 0; // setting floats to hold the pitch and roll of the blimp/module
 
-// establishing the servo's
-Servo myServo;
-static const int servoLeftMotor = 18;
-int min = 500; // in micro seconds
-int max = 2500; // in micro seconds
- 
+//setting pins
+//motor esc pin
+const int leftESCPin = 26;
+const int rightESCPin = 25;
+// Functions used to control the Blimp
+// Motor Control
+
+void setMotorSpeeds(int leftPercent, int rightPercent) {
+  // Constrain inputs to ensure they stay within the -100 to 100 range
+  leftPercent = constrain(leftPercent, -100, 100);
+  rightPercent = constrain(rightPercent, -100, 100);
+
+  // mapping -100 - 100 to the proper values needed to control the motor
+  int leftUs = map(leftPercent, -100, 100, 1000, 2000);
+  int rightUs = map(rightPercent, -100, 100, 1000, 2000);
+
+  // Send pulses to both pins simultaneously
+  // We start both HIGH at the same time
+  digitalWrite(leftESCPin, HIGH);
+  digitalWrite(rightESCPin, HIGH);
+
+  // We turn them LOW based on which pulse finishes first
+  if (leftUs < rightUs) {
+    delayMicroseconds(leftUs);
+    digitalWrite(leftESCPin, LOW);
+    delayMicroseconds(rightUs - leftUs);
+    digitalWrite(rightESCPin, LOW);
+    // Finish the rest of the 20ms frame (20000us)
+    delayMicroseconds(20000 - rightUs);
+  } else {
+    delayMicroseconds(rightUs);
+    digitalWrite(rightESCPin, LOW);
+    delayMicroseconds(leftUs - rightUs);
+    digitalWrite(leftESCPin, LOW);
+    // Finish the rest of the 20ms frame (20000us)
+    delayMicroseconds(20000 - leftUs);
+  }
+}
+
+
 void setup() {
-  // put your setup code here, to run once:
 
+  // this sets the motors and ensures that the esc's start properly
+  pinMode(leftESCPin, OUTPUT);
+  pinMode(rightESCPin, OUTPUT);
+
+  // Arming: Send "Stop" signal for 3 seconds
+  for (int i = 0; i < 150; i++) {
+    setMotorSpeeds(0, 0); 
+  }
 }
 
 void loop() {

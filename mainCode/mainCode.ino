@@ -15,6 +15,7 @@ struct Waypoint {
     float alt;
 };
 // *** this is where we change and add waypoints ***
+// use https://www.geoplaner.com/ to find the route
 // its goes lat, long, alt(meters)
 const Waypoint missionPath[] = {
     {42.9849, -81.2453, 30.0}, 
@@ -23,6 +24,21 @@ const Waypoint missionPath[] = {
 }
 // counter that keeps track of the current waypoint
 int currentWaypoint = 0;
+
+// adding the ability to add no fly zones (later we will add functionality to imediatly fly to the ground if entering the zone)
+struct NoFlyZone {
+    float lat;
+    float lon;
+    float radius; // Distance in meters from the center to stay away
+};
+
+// this is where we add the areas the blimp must not go by law
+// they can be found at https://map.navdrone.ca/
+// it goes lat, long, radius(meters)
+const NoFlyZone restrictedAreas[] = {
+    {42.9860, -81.2550, 500.0}, 
+    {42.9920, -81.2400, 100.0}  
+
 //****PINS THAT ARE SET/USED****
 //motor esc pin
 const int leftESCPin = 26;

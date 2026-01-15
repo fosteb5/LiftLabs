@@ -36,8 +36,8 @@ struct NoFlyZone {
 // they can be found at https://map.navdrone.ca/
 // it goes lat, long, radius(meters)
 const NoFlyZone restrictedAreas[] = {
-    {42.9860, -81.2550, 500.0}, 
-    {42.9920, -81.2400, 100.0}  
+    {43.03192, -81.14856, 10000.0}, // london airport, 10km radius
+    {43.01306, -81.27440, 2000.0} // western hospital, 2km radius 
 
 //****PINS THAT ARE SET/USED****
 //motor esc pin

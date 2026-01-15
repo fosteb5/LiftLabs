@@ -38,7 +38,19 @@ struct NoFlyZone {
 const NoFlyZone restrictedAreas[] = {
     {43.03192, -81.14856, 10000.0}, // london airport, 10km radius
     {43.01306, -81.27440, 2000.0} // western hospital, 2km radius 
+}
 
+
+// creating the framework of the current flight mode
+enum FlightMode {
+  Land,          // Direct control via ESP-NOW
+  Flight,      // Following waypoints (Lat, Lon, Alt)
+  HoldPos,    // Holding position to save energy
+  EmergancyLand,  // Immediate descent (No-fly zone or Kill Switch)
+  OFF              // Motors disarmed
+};
+// varble to hold the state
+FlightMode currentMode = OFF;
 //****PINS THAT ARE SET/USED****
 //motor esc pin
 const int leftESCPin = 26;

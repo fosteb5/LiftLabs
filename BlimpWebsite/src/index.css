@@ -87,6 +87,18 @@ All colors MUST be HSL.
     background: var(--gradient-gold-shine);
   }
 
+  .bg-gradient-purple {
+    background: var(--gradient-purple);
+  }
+
+  .bg-gradient-purple-gold {
+    background: var(--gradient-purple-gold);
+  }
+
+  .bg-gradient-gold-shine {
+    background: var(--gradient-gold-shine);
+  }
+
   .shadow-purple {
     box-shadow: var(--shadow-purple);
   }

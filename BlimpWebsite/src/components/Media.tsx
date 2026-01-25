@@ -5,23 +5,9 @@ const Media = () => {
     {
       icon: Award,
       title: "Innovation Fund Award",
-      date: "March 2025",
-      description: "Western Engineering Blimp Team receives funding from the John M. Thompson Innovation Fund",
+      date: "Febuary 2025",
+      description: "LiftLabs receives funding from the John M. Thompson Innovation Fund",
       type: "Achievement",
-    },
-    {
-      icon: Calendar,
-      title: "Design Showcase",
-      date: "February 2025",
-      description: "Team presents project at Western Engineering Design Showcase to faculty and industry partners",
-      type: "Event",
-    },
-    {
-      icon: Newspaper,
-      title: "Campus Feature",
-      date: "January 2025",
-      description: "Featured in Western Gazette for innovative approach to sustainable aerospace technology",
-      type: "Press",
     },
   ];
 

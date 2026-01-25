@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-blimp.jpg";
 
 const Hero = () => {
-  const scrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToSponsors = () => {
+    document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -42,28 +42,22 @@ const Hero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button
             size="lg"
-            onClick={scrollToContact}
-            className="bg-accent text-accent-foreground hover:bg-accent-muted font-heading font-semibold text-lg px-8 py-6 shadow-gold transition-smooth hover:scale-105"
+            onClick={scrollToSponsors}
+            className="bg-accent text-accent-foreground hover:bg-accent-muted font-heading font-semibold text-lg px-8 py-6 shadow-gold transition-smooth hover:scale-105 animate-bounce"
           >
-            Get Involved
+            Become a Sponsor
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           
           <Button
             size="lg"
             variant="outline"
-            onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-            className="border-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 font-heading font-semibold text-lg px-8 py-6 backdrop-blur-sm transition-smooth"
+            onClick={() => document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth" })}
+            className="border-2 border-[#FFD700] text-[#FFD700] hover:bg-[#FFD700]/10 font-heading font-semibold text-lg px-8 py-6 transition-smooth animate-bounce"
+            style={{ animationDelay: "0.15s" }}
           >
-            Learn More
+            Project Gallery
           </Button>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-primary-foreground/40 rounded-full flex items-start justify-center p-2">
-            <div className="w-1 h-3 bg-accent rounded-full animate-pulse-slow" />
-          </div>
         </div>
       </div>
     </section>

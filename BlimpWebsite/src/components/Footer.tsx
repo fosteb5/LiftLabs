@@ -46,19 +46,7 @@ const Footer = () => {
               renewable energy in flight.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
-                <Instagram className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
-                <Linkedin className="h-4 w-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
+              <a href="https://github.com/fosteb5/AeroDonkeys.git" className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-smooth">
                 <Github className="h-4 w-4" />
               </a>
             </div>
@@ -95,11 +83,11 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-bold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li>blimp.team@uwo.ca</li>
-              <li>(519) 661-1234</li>
+              <li>kbrand9@uwo.ca</li>
+              <li>(587) 586-5850</li>
               <li className="leading-relaxed">
                 Western Engineering<br />
-                London, ON N6A 5B9
+                London, ON. N6A 5B9
               </li>
             </ul>
           </div>
@@ -108,7 +96,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-primary-foreground/10 text-center text-sm text-primary-foreground/60">
           <p>
-            © {currentYear} Western Engineering Blimp Team. All rights reserved.
+            © {currentYear} LiftLabs. All rights reserved.
           </p>
         </div>
       </div>

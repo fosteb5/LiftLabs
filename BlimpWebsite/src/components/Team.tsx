@@ -6,33 +6,38 @@ const Team = () => {
       name: "Kyle Brand",
       role: "",
       description: "Mechatronics and AI Engineer, 4th Year",
+      linkedin: "www.linkedin.com/in/brand-kyle/",
     },
     {
       name: "Owen O'Donnell",
       role: "",
       description: "Mechatronics and AI Engineer, 4th Year",
+      linkedin: "www.linkedin.com/in/owen-o%E2%80%99donnell-347940295/",
     },
     {
       name: "Karl Guirguis",
       role: "",
       description: "Software Engineer and HBA, 4th Year",
+      linkedin: "www.linkedin.com/in/karl-guirguis",
     },
     {
       name: "Foster Beard",
       role: "",
       description: "Electrical and AI Engineering, 4rd Year",
+      linkedin: "www.linkedin.com/in/fosterbeard/",
     },
     {
       name: "Ethan Skinner",
       role: "",
       description: "Mechatronics and AI Engineer, 4th Year",
-    },
-    {
-      name: "Maya Johnson",
-      role: "Operations Manager",
-      description: "Engineering Management, 3rd Year",
+      linkedin: "www.linkedin.com/in/ethan-skinner-93a023263/",
     },
   ];
+
+  const formatLink = (url?: string) => {
+    if (!url) return undefined;
+    return url.startsWith("http") ? url : `https://${url}`;
+  };
 
   return (
     <section id="team" className="py-24 bg-secondary">
@@ -78,14 +83,18 @@ const Team = () => {
                     {member.description}
                   </p>
                   
-                  <div className="flex justify-center space-x-3">
-                    <button className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-smooth">
-                      <Linkedin className="h-5 w-5" />
-                    </button>
-                    <button className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-smooth">
-                      <Mail className="h-5 w-5" />
-                    </button>
-                  </div>
+                  {member.linkedin && (
+                    <div className="flex justify-center space-x-3">
+                      <a
+                        href={formatLink(member.linkedin)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-smooth"
+                      >
+                        <Linkedin className="h-5 w-5" />
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -30,6 +30,14 @@ const Navigation = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const navLinkClass = isScrolled
+    ? "text-foreground hover:text-primary"
+    : "text-white hover:text-primary drop-shadow";
+
+  const brandTextClass = isScrolled
+    ? "text-primary"
+    : "text-white drop-shadow";
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -46,11 +54,10 @@ const Navigation = () => {
             className="flex items-center space-x-3 group"
           >
             <div className="w-12 h-12 rounded-full bg-gradient-purple flex items-center justify-center shadow-purple transition-smooth group-hover:scale-110">
-              <span className="text-2xl font-heading font-bold text-primary-foreground">W</span>
+              <span className="text-2xl font-heading font-bold text-primary-foreground">L</span>
             </div>
             <div className="hidden md:block">
-              <div className="text-sm font-semibold text-primary">Western Engineering</div>
-              <div className="text-xs text-accent font-semibold">Blimp Team</div>
+              <div className={`text-sm font-semibold ${brandTextClass}`}>LiftLabs</div>
             </div>
           </button>
 
@@ -61,7 +68,7 @@ const Navigation = () => {
                 key={item.href}
                 variant="ghost"
                 onClick={() => scrollToSection(item.href)}
-                className="text-foreground hover:text-primary font-medium transition-smooth"
+                className={`${navLinkClass} font-medium transition-smooth`}
               >
                 {item.label}
               </Button>
@@ -72,7 +79,7 @@ const Navigation = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden text-foreground"
+            className={`md:hidden ${isScrolled ? "text-foreground" : "text-white drop-shadow"}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -87,7 +94,7 @@ const Navigation = () => {
                 key={item.href}
                 variant="ghost"
                 onClick={() => scrollToSection(item.href)}
-                className="w-full justify-start text-foreground hover:text-primary font-medium mb-2"
+                className={`w-full justify-start ${navLinkClass} font-medium mb-2`}
               >
                 {item.label}
               </Button>

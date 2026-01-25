@@ -13,8 +13,11 @@ const Contact = () => {
     subject: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT || "";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
@@ -27,19 +30,56 @@ const Contact = () => {
       return;
     }
 
-    // Simulate form submission
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for your interest. We'll be in touch soon.",
-    });
+    if (!formspreeEndpoint) {
+      toast({
+        title: "Submission unavailable",
+        description: "Form endpoint is not configured.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit");
+      }
+
+      toast({
+        title: "Message sent!",
+        description: "Thanks for reaching out. We'll reply soon.",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      toast({
+        title: "Submission failed",
+        description: "Please try again in a moment.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -69,8 +109,8 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold text-primary mb-1">Email</h4>
-                  <a href="mailto:blimp.team@uwo.ca" className="text-muted-foreground hover:text-primary transition-smooth">
-                    blimp.team@uwo.ca
+                  <a href="mailto:kbrand9@uwo.ca" className="text-muted-foreground hover:text-primary transition-smooth">
+                    kbrand9@uwo.ca
                   </a>
                 </div>
               </div>
@@ -82,7 +122,7 @@ const Contact = () => {
                 <div>
                   <h4 className="font-semibold text-primary mb-1">Phone</h4>
                   <a href="tel:+15196611234" className="text-muted-foreground hover:text-primary transition-smooth">
-                    (519) 661-1234
+                    (587) 586-5850
                   </a>
                 </div>
               </div>
@@ -95,8 +135,7 @@ const Contact = () => {
                   <h4 className="font-semibold text-primary mb-1">Location</h4>
                   <p className="text-muted-foreground">
                     Western Engineering<br />
-                    1151 Richmond St<br />
-                    London, ON N6A 5B9
+                    London, ON. N6A 5B9
                   </p>
                 </div>
               </div>
@@ -173,9 +212,10 @@ const Contact = () => {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gradient-purple text-primary-foreground hover:opacity-90 font-heading font-semibold text-lg shadow-purple transition-smooth"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-purple text-primary-foreground hover:opacity-90 disabled:opacity-60 font-heading font-semibold text-lg shadow-purple transition-smooth"
               >
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
           </div>

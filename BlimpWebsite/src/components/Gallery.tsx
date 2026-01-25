@@ -3,25 +3,45 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import cadImage from "@/assets/blimp-cad-1.jpg";
 import detailImage from "@/assets/blimp-detail-1.jpg";
 import mockupImage from "@/assets/blimp-mockup-1.jpg";
+import printImage from "@/assets/3DPrint.jpeg";
+import solarImage from "@/assets/solarpanel.jpeg";
+import motorImage from "@/assets/motor.jpeg";
+import workspaceImage from "@/assets/workstation.jpg";
+import blimpPhoto from "@/assets/blimp.jpg";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const images = [
     {
+      src: blimpPhoto,
+      title: "Blimp Assembly",
+      description: "Physical build of the airframe in the lab.",
+    },
+    {
+      src: workspaceImage,
+      title: "Build Lab",
+      description: "Workstation where wiring, code, and testing come together.",
+    },
+    {
       src: cadImage,
       title: "CAD Design",
-      description: "Detailed 3D modeling of the blimp structure and systems",
+      description: "Detailed 3D modeling of the blimp structure and systems.",
     },
     {
-      src: detailImage,
-      title: "Solar Integration",
-      description: "Close-up of solar panel configuration and mounting",
+      src: printImage,
+      title: "3D Printed Components",
+      description: "Prototype parts and brackets fresh off the printer.",
     },
     {
-      src: mockupImage,
-      title: "System Mockup",
-      description: "Visualization of autonomous control systems",
+      src: solarImage,
+      title: "Solar Hardware",
+      description: "Panel hardware staged for integration tests.",
+    },
+    {
+      src: motorImage,
+      title: "Motor & Propulsion",
+      description: "Motor setup as we tune thrust and control.",
     },
   ];
 
@@ -30,7 +50,7 @@ const Gallery = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-heading font-bold text-primary mb-4">
-            Design Gallery
+            Project Gallery
           </h2>
           <div className="w-24 h-1 bg-gradient-purple-gold mx-auto mb-6" />
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">

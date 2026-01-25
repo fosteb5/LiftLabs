@@ -1,6 +1,6 @@
-## About Aero Donkeys
+## About Lift Labs
 
-Welcome to the **Aero Donkeys** repository! 🚀  
+Welcome to the **Lift Labs** repository! 🚀  
 We’re building an **autonomous blimp** as part of our ongoing research and engineering project.  
 
 This repo contains:

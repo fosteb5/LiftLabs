@@ -8,6 +8,42 @@
 #include <Adafruit_MPU6050.h>
 #include <ESP32Servo.h> // used to make the servo function
 #include <Ultrasonic.h> // needed to calculate distannce with the ultrasonic
+
+/*Complete Pin Use List
+26 - Left ESC
+25 - Right ESC
+18 - Left Motor Servo
+19 - Right Motor Servo
+13 - Left Flap Servo
+12 - Right Flap Servo
+*/
+
+/*Curently Unused Pins
+15
+2
+0
+4
+16
+17
+5
+21
+RX
+TX
+22
+23
+13
+12
+14
+27
+33
+32
+35
+34
+VN
+VP
+*/
+
+
 // flight path for the blimp
 struct Waypoint {
     float latitude;
@@ -38,13 +74,13 @@ struct NoFlyZone {
 const NoFlyZone restrictedAreas[] = {
     {43.03192, -81.14856, 10000.0}, // london airport, 10km radius
     {43.01306, -81.27440, 2000.0} // western hospital, 2km radius 
-}
+} // the conversion of km to lat is 1=111km, and for long is 1=111.32km(cos(latitude))
 
 
 // creating the framework of the current flight mode
 enum FlightMode {
   Land,          // Direct control via ESP-NOW
-  Flight,      // Following waypoints (Lat, Lon, Alt)
+  Flight,      // Following waypoints (Lat, Long, Alt)
   HoldPos,    // Holding position to save energy
   EmergancyLand,  // Immediate descent (No-fly zone or Kill Switch)
   OFF              // Motors disarmed
@@ -59,8 +95,8 @@ const int rightESCPin = 25;
 const int leftMotorServoPin = 18;
 const int rightMotorServoPin = 19;
 //flap servo pins
-const int leftFlapServoPin = 21;
-const int rightFlapServoPin = 3;
+const int leftFlapServoPin = 13;
+const int rightFlapServoPin = 12;
 
 
 // Functions used to control the Blimp
